@@ -1,0 +1,94 @@
+http:
+  port: 8080
+
+apiEndpoints:
+  users:
+    host: localhost
+    paths: '/api/users/*'
+  mentorship:
+    host: localhost
+    paths: '/api/mentorship/*'
+  messaging:
+    host: localhost
+    paths: '/api/messages/*'
+  groups:
+    host: localhost
+    paths: '/api/groups/*'
+  events:
+    host: localhost
+    paths: '/api/events/*'
+  resources:
+    host: localhost
+    paths: '/api/resources/*'
+  jobs:
+    host: localhost
+    paths: '/api/jobs/*'
+  notifications:
+    host: localhost
+    paths: '/api/notifications/*'
+
+serviceEndpoints:
+  userService:
+    url: 'http://localhost:3000'
+  mentorshipService:
+    url: 'http://localhost:3001'
+  messagingService:
+    url: 'http://localhost:3002'
+  groupService:
+    url: 'http://localhost:3003'
+  eventService:
+    url: 'http://localhost:3004'
+  resourceService:
+    url: 'http://localhost:3005'
+  jobService:
+    url: 'http://localhost:3006'
+  notificationService:
+    url: 'http://localhost:3007'
+
+policies:
+  - proxy
+
+pipelines:
+  default:
+    apiEndpoints:
+      - users
+      - mentorship
+      - messaging
+      - groups
+      - events
+      - resources
+      - jobs
+      - notifications
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: userService
+              changeOrigin: true
+      - proxy:
+          - action:
+              serviceEndpoint: mentorshipService
+              changeOrigin: true
+      - proxy:
+          - action:
+              serviceEndpoint: messagingService
+              changeOrigin: true
+      - proxy:
+          - action:
+              serviceEndpoint: groupService
+              changeOrigin: true
+      - proxy:
+          - action:
+              serviceEndpoint: eventService
+              changeOrigin: true
+      - proxy:
+          - action:
+              serviceEndpoint: resourceService
+              changeOrigin: true
+      - proxy:
+          - action:
+              serviceEndpoint: jobService
+              changeOrigin: true
+      - proxy:
+          - action:
+              serviceEndpoint: notificationService
+              changeOrigin: true
