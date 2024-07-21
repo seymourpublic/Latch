@@ -1,10 +1,16 @@
 const Message = require('../models/Message');
+const { getIo } = require('../socket'); // Import the getIo function
 
 exports.sendMessage = async (req, res) => {
   try {
     const { sender, receiver, content } = req.body;
     const newMessage = new Message({ sender, receiver, content });
     await newMessage.save();
+
+    // Emit a WebSocket event for the new message
+    const io = getIo();
+    io.to(receiver.toString()).emit('newMessage', newMessage);
+    
     res.status(201).json(newMessage);
   } catch (error) {
     res.status(500).json({ error: error.message });
