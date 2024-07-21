@@ -1,94 +1,115 @@
 http:
   port: 8080
 
+admin:
+  port: 9876
+  host: localhost
+
 apiEndpoints:
-  users:
-    host: localhost
-    paths: '/api/users/*'
+  user:
+    host: "*"
+    paths: "/api/users/*"
+  group:
+    host: "*"
+    paths: "/api/groups/*"
   mentorship:
-    host: localhost
-    paths: '/api/mentorship/*'
-  messaging:
-    host: localhost
-    paths: '/api/messages/*'
-  groups:
-    host: localhost
-    paths: '/api/groups/*'
-  events:
-    host: localhost
-    paths: '/api/events/*'
-  resources:
-    host: localhost
-    paths: '/api/resources/*'
-  jobs:
-    host: localhost
-    paths: '/api/jobs/*'
-  notifications:
-    host: localhost
-    paths: '/api/notifications/*'
+    host: "*"
+    paths: "/api/mentorships/*"
+  job:
+    host: "*"
+    paths: "/api/jobs/*"
+  event:
+    host: "*"
+    paths: "/api/events/*"
+  resource:
+    host: "*"
+    paths: "/api/resources/*"
+  message:
+    host: "*"
+    paths: "/api/messages/*"
+  notification:
+    host: "*"
+    paths: "/api/notifications/*"
 
 serviceEndpoints:
   userService:
-    url: 'http://localhost:3000'
-  mentorshipService:
-    url: 'http://localhost:3001'
-  messagingService:
-    url: 'http://localhost:3002'
+    url: "http://localhost:3000"
   groupService:
-    url: 'http://localhost:3003'
-  eventService:
-    url: 'http://localhost:3004'
-  resourceService:
-    url: 'http://localhost:3005'
+    url: "http://localhost:3001"
+  mentorshipService:
+    url: "http://localhost:3002"
   jobService:
-    url: 'http://localhost:3006'
+    url: "http://localhost:3003"
+  eventService:
+    url: "http://localhost:3004"
+  resourceService:
+    url: "http://localhost:3005"
+  messageService:
+    url: "http://localhost:3006"
   notificationService:
-    url: 'http://localhost:3007'
+    url: "http://localhost:3007"
 
 policies:
   - proxy
+  - cors
+  - log
 
 pipelines:
   default:
     apiEndpoints:
-      - users
+      - user
+      - group
       - mentorship
-      - messaging
-      - groups
-      - events
-      - resources
-      - jobs
-      - notifications
+      - job
+      - event
+      - resource
+      - message
+      - notification
     policies:
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,PUT,POST,DELETE"
+      - log:
+          - action:
+              message: "Request received"
       - proxy:
           - action:
               serviceEndpoint: userService
               changeOrigin: true
-      - proxy:
-          - action:
-              serviceEndpoint: mentorshipService
-              changeOrigin: true
-      - proxy:
-          - action:
-              serviceEndpoint: messagingService
-              changeOrigin: true
+              strategy: round-robin
       - proxy:
           - action:
               serviceEndpoint: groupService
               changeOrigin: true
+              strategy: round-robin
       - proxy:
           - action:
-              serviceEndpoint: eventService
+              serviceEndpoint: mentorshipService
               changeOrigin: true
-      - proxy:
-          - action:
-              serviceEndpoint: resourceService
-              changeOrigin: true
+              strategy: round-robin
       - proxy:
           - action:
               serviceEndpoint: jobService
               changeOrigin: true
+              strategy: round-robin
+      - proxy:
+          - action:
+              serviceEndpoint: eventService
+              changeOrigin: true
+              strategy: round-robin
+      - proxy:
+          - action:
+              serviceEndpoint: resourceService
+              changeOrigin: true
+              strategy: round-robin
+      - proxy:
+          - action:
+              serviceEndpoint: messageService
+              changeOrigin: true
+              strategy: round-robin
       - proxy:
           - action:
               serviceEndpoint: notificationService
               changeOrigin: true
+              strategy: round-robin

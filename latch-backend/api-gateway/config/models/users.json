@@ -1,0 +1,12 @@
+[
+    {
+      "id": "user1",
+      "username": "admin",
+      "password": "password123",
+      "email": "admin@example.com",
+      "firstName": "Admin",
+      "lastName": "User",
+      "scopes": []
+    }
+  ]
+  
